@@ -1,10 +1,8 @@
-from typing import Any
-
 import torch
 from torch import nn
 
 class MyIrisNet(nn.Module):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self.network_stack = nn.Sequential(
