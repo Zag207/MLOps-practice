@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # ========== База данных для метаданных MLflow ==========
+  # Postgres
   postgres:
     image: postgres:15
     container_name: mlflow_postgres
@@ -10,8 +10,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432" # для внешнего доступа с консоли
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,10 +17,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # networks:
-    #   - mlflow_network
 
-  # ========== S3-совместимое хранилище артефактов ==========
+  # S3
   minio:
     image: minio/minio:latest
     container_name: mlflow_minio
@@ -32,7 +28,6 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
-      # - "9000:9000"  # API для программного доступа
       - "9001:9001"  # Веб-консоль MinIO
     volumes:
       - minio_data:/data
@@ -41,10 +36,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    # networks:
-    #   - mlflow_network
 
-  # ========== Создание бакета в MinIO (одноразовая задача) ==========
+  # Создание бакета в MinIO 
   minio-create-bucket:
     image: minio/mc:latest
     container_name: mlflow_minio_bucket
@@ -58,10 +51,7 @@ services:
       echo 'Bucket ${ARTIFACTS_BUCKET_NAME} created';
       exit 0;
       "
-    # networks:
-    #   - mlflow_network
 
-  # ========== MLflow Tracking Server ==========
   mlflow:
     build:
       context: ./mlflow
@@ -91,18 +81,9 @@ services:
         condition: service_healthy
       minio-create-bucket:
         condition: service_completed_successfully
-    # networks:
-    #   - mlflow_network
 
-# ========== Тома для хранения данных ==========
 volumes:
   postgres_data:
     name: mlflow_postgres_data
   minio_data:
     name: mlflow_minio_data
-
-# ========== Внутренняя сеть ==========
-# networks:
-#   mlflow_network:
-#     name: mlflow_network
-#     driver: bridge
