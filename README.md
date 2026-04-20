@@ -1,0 +1,7 @@
+Что должен содержать .env для docker compose:
+- POSTGRES_USER=
+- POSTGRES_PASSWORD=
+- POSTGRES_DB=
+- MINIO_ROOT_USER=
+- MINIO_ROOT_PASSWORD=
+- ARTIFACTS_BUCKET_NAME=

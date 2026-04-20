@@ -1,9 +1,7 @@
-from src.NeuralNetwork import MyIrisNet
+
 
 def main():
-    model = MyIrisNet()
-
-    print(model)
+    print("GOIDA")
 
 
 if __name__ == "__main__":
