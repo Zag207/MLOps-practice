@@ -35,7 +35,7 @@ model = MyIrisNet()
 criterion = nn.CrossEntropyLoss()
 optimazer = optim.Adam(model.parameters(), lr=params_exp["learning_rate"])
 
-mlflow.set_experiment("iris-classification_3")
+mlflow.set_experiment("iris-classification_1")
 with mlflow.start_run():
     mlflow.log_params({
         "input_dim": 4,
@@ -68,7 +68,9 @@ with mlflow.start_run():
         "f1_score": float(f1_score(Y_test, y_pred, average='weighted')),
     })
 
-    mlflow.pyfunc.log_model(model, "model", registered_model_name="iris_classification")
+    mlflow.pytorch.log_model(
+        pytorch_model=model,
+        artifact_path="model",
+        registered_model_name="iris_classification"
+    )
 
-
-# torch.save(model.state_dict(), "model_state.pth")
