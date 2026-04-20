@@ -94,28 +94,6 @@ services:
     # networks:
     #   - mlflow_network
 
-  # ========== FastAPI сервис для инференса ==========
-  # fastapi:
-  #   build:
-  #     context: ./fastapi_service
-  #     dockerfile: Dockerfile
-  #   container_name: iris_fastapi
-  #   restart: unless-stopped
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     MLFLOW_TRACKING_URI: http://mlflow:5000
-  #     MLFLOW_S3_ENDPOINT_URL: http://minio:9000
-  #     AWS_ACCESS_KEY_ID: minioadmin
-  #     AWS_SECRET_ACCESS_KEY: minioadmin
-  #     MODEL_NAME: IrisClassifier
-  #     MODEL_STAGE: Production
-  #   depends_on:
-  #     - mlflow
-  #     - minio
-  #   networks:
-  #     - mlflow_network
-
 # ========== Тома для хранения данных ==========
 volumes:
   postgres_data:

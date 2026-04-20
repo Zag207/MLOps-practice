@@ -29,6 +29,8 @@ mlflow.set_tracking_uri("http://localhost:5000")
 
 model = mlflow.pyfunc.load_model("models:/iris_classification/1")
 
+logger.info("Модель подгружена")
+
 app = FastAPI()
 
 @app.post("/predict", response_model=IrisPredictedClassResponse)

@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch import optim
 
-from NeuralNetwork import MyIrisNet
+from api.NeuralNetwork import MyIrisNet
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
