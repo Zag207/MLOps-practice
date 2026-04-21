@@ -14,7 +14,7 @@
 
 MLFlow, MinIO, PostgreSQL запускаются с помощью docker-compose. Были открыты порты:
 - MLFlow (5000) для веб консоли;
-- PMinIO (9001) для веб консоли.
+- MinIO (9001) для веб консоли.
 
 В docker-compose добавлена одноразовая задача под названием minio-create-bucket для создания бакета в S3-хранилище MinIO.
 
