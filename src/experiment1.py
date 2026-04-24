@@ -1,6 +1,13 @@
 import mlflow
+import mlflow.pytorch
+import mlflow.onnx
+
+import onnx
+
+import joblib
 
 import torch
+import torch.onnx
 from torch import nn
 from torch import optim
 
@@ -68,9 +75,31 @@ with mlflow.start_run():
         "f1_score": float(f1_score(Y_test, y_pred, average='weighted')),
     })
 
-    mlflow.pytorch.log_model(
-        pytorch_model=model,
-        artifact_path="model",
-        registered_model_name="iris_classification"
+    dummy_input = torch.randn(1, 4) 
+
+    torch.onnx.export(
+        model,                      # ваша обученная модель
+        dummy_input,                # пример входных данных
+        "model.onnx",               # название файла
+        export_params=True,         # сохраняем веса внутри файла
+        opset_version=11,           # стандартная версия ONNX
+        do_constant_folding=True,   # оптимизация
+        input_names=['input'],      # имя входа для API
+        output_names=['output'],    # имя выхода для API
+        dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}} # разрешаем разный размер батча
     )
+
+    onnx_model = onnx.load("model.onnx")
+
+    # Логируем в MLflow
+    mlflow.onnx.log_model(
+        onnx_model=onnx_model,
+        artifact_path="onnx-model",
+        registered_model_name="iris_onnx_model"
+    )
+
+    joblib.dump(scaler, "scaler.pkl")
+    mlflow.log_artifact("scaler.pkl")
+
+    # mlflow.pytorch.log_model(model, "model", registered_model_name="iris_classification")
 

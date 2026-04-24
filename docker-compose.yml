@@ -61,6 +61,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      MLFLOW_SERVER_ALLOWED_HOSTS: "*"
       # Настройки подключения к PostgreSQL
       MLFLOW_BACKEND_STORE_URI: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       # Настройки подключения к MinIO (S3)
@@ -81,6 +82,15 @@ services:
         condition: service_healthy
       minio-create-bucket:
         condition: service_completed_successfully
+  fastapi:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: ml_api
+    restart: unless-stopped
+    ports:
+      - "80:80"
+  
 
 volumes:
   postgres_data:

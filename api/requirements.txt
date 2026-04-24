@@ -1,0 +1,6 @@
+fastapi[standard]==0.136.0,
+joblib==1.5.3,
+mlflow==3.11.1,
+onnxruntime==1.25.0,
+numpy==2.4.4,
+scipy==1.17.1
